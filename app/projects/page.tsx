@@ -80,6 +80,10 @@ export default function ProjectsPage() {
     }
   };
 
+  const handleDeleteProject = (id: number) => {
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+  };
+
   // Filtered list
   const filteredProjects = projects.filter((proj) => {
     const matchesSearch = proj.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -90,18 +94,28 @@ export default function ProjectsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Page Header with Single H1 */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
-        <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+      {/* Immersive Header Banner with directory.png */}
+      <div className="relative overflow-hidden rounded-3xl p-8 bg-[#0b0f19] border border-white/10 flex flex-col md:flex-row items-center md:items-center justify-between gap-6 group mb-2">
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <img 
+            src="/directory.png" 
+            alt="Operations Inventory Simulation" 
+            className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-[1.03] transition-transform duration-[7s] ease-out"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f19] via-[#0b0f19]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent" />
+        </div>
+
+        <div className="relative z-10 text-center md:text-left">
+          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center justify-center md:justify-start gap-2">
             Operations Directory
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Complete inventory of active, pending, and complete construction sites
+          <p className="text-xs text-slate-300 mt-1.5 max-w-md">
+            Complete decentralized registry containing all pending, operational, and finalized construction frameworks.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 relative z-10">
           <Link
             href="/planner"
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-500/10 text-sky-400 font-bold text-xs border border-sky-500/20 hover:bg-sky-500/20 transition-all shadow-sm"
@@ -171,7 +185,11 @@ export default function ProjectsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
           {filteredProjects.map((proj) => (
-            <ProjectCard key={proj.id} project={proj} />
+            <ProjectCard 
+              key={proj.id} 
+              project={proj} 
+              onDelete={handleDeleteProject} 
+            />
           ))}
         </div>
       )}

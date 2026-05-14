@@ -40,3 +40,36 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } | Promise<{ id: string }> }
+) {
+  try {
+    const resolvedParams = await params;
+    const id = parseInt(resolvedParams.id, 10);
+
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid project identifier" },
+        { status: 400 }
+      );
+    }
+
+    // Relational Atomic Cascade deletion via Transaction to bypass missing Prisma onDelete constraint
+    await prisma.$transaction([
+      prisma.task.deleteMany({ where: { projectId: id } }),
+      prisma.risk.deleteMany({ where: { projectId: id } }),
+      prisma.decision.deleteMany({ where: { projectId: id } }),
+      prisma.project.deleteMany({ where: { id } })
+    ]);
+
+    return NextResponse.json({ success: true, message: "Project deleted successfully" });
+  } catch (error: any) {
+    console.error("Project deletion failure:", error);
+    return NextResponse.json(
+      { success: false, error: error.message || "Internal server error during deletion" },
+      { status: 500 }
+    );
+  }
+}

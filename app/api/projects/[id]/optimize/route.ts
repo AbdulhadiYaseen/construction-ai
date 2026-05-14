@@ -1,14 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { schedulerAgent } from "@/agents/schedulerAgent";
+import { riskAgent } from "@/agents/riskAgent";
+import { decisionAgent } from "@/agents/decisionAgent";
 
-export async function POST(
-  req: Request,
-  context: any
-) {
-  // Clean parameter unwrapping compliant with Next.js 16 App Router
+export async function POST(req: Request, context: any) {
+  // Compliant App Router dynamic context resolution
   const resolvedParams = await context.params;
   const projectId = parseInt(resolvedParams.id, 10);
-  
+
   try {
     const body = await req.json();
     const { type } = body; // Accepts "tasks" or "risks"
@@ -17,61 +17,53 @@ export async function POST(
       return NextResponse.json({ success: false, error: "Invalid entity identifier" }, { status: 400 });
     }
 
+    // Retrieve project details to feed directly into Gemini context pipelines
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { name: true, description: true },
+    });
+
+    if (!project) {
+      return NextResponse.json({ success: false, error: "Project footprint not found" }, { status: 404 });
+    }
+
     if (type === "tasks") {
-      // Atomically inject optimized tasks into operational tracking grid
+      // 🤖 Invoke Gemini Scheduler Sub-Agent
+      const optimizedTasks = await schedulerAgent(project.name, project.description);
+
+      // Atomically inject dynamically synthesized tasks into the tracking grid
       await prisma.project.update({
         where: { id: projectId },
         data: {
           tasks: {
-            create: [
-              {
-                title: "Seismic Perimeter Sensor Grid Setup",
-                status: "In Progress",
-                assignedTo: "Surveillance Node Alpha",
-                deadline: "T+2 Days"
-              },
-              {
-                title: "Core Structural Shaft Concrete Preparation",
-                status: "Pending",
-                assignedTo: "Automated Pour Systems",
-                deadline: "T+8 Days"
-              }
-            ]
-          }
-        }
+            create: optimizedTasks,
+          },
+        },
       });
     } else if (type === "risks") {
-      // Atomically inject identified risks and log corresponding autonomous decision mitigations
+      // 🤖 Invoke Gemini Risk Inspection Agent
+      const generatedRisks = await riskAgent(project.name, project.description);
+
+      // 🤖 Invoke Gemini Operator Agent passing active risk context
+      const generatedDecisions = await decisionAgent(project.name, project.description, generatedRisks);
+
+      // Atomically insert dynamic hazards and autonomous log tracks
       await prisma.project.update({
         where: { id: projectId },
         data: {
           risks: {
-            create: [
-              {
-                riskType: "Excessive High-Elevation Wind Shearing",
-                severity: "High"
-              },
-              {
-                riskType: "Supply Logistics Frequency Stalling",
-                severity: "Medium"
-              }
-            ]
+            create: generatedRisks,
           },
           decisions: {
-            create: [
-              {
-                action: "Deploy Dynamic Shear-Dampening Sensors",
-                reason: "Automate crane suspension lockouts upon detecting elevated wind speeds."
-              }
-            ]
-          }
-        }
+            create: generatedDecisions,
+          },
+        },
       });
     }
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
-    console.error("Optimization Pipeline Failure:", err);
+    console.error("Gemini Agent Optimization Pipeline Failure:", err);
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }

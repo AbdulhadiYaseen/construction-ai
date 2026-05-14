@@ -88,25 +88,35 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Top Banner / Welcome Callout */}
-      <div className="relative overflow-hidden rounded-3xl p-8 bg-gradient-to-r from-sky-900/40 via-indigo-900/20 to-[#0b0f19] border border-sky-500/20">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-3xl p-8 md:p-10 bg-[#0b0f19] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 group">
+        {/* High-Fidelity Backdrop Graphics Engine */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <img 
+            src="/dashboard.png" 
+            alt="Dashboard Simulation Grid" 
+            className="absolute inset-0 w-full h-full object-cover opacity-35 md:opacity-50 group-hover:scale-105 transition-transform duration-[8s] ease-out"
+          />
+          {/* Standard layout masks preventing readable clash */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f19] via-[#0b0f19]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl opacity-60" />
+        </div>
         
         <div className="relative z-10 max-w-2xl">
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-widest inline-block mb-3">
+          <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30 uppercase tracking-widest inline-block mb-3">
             System Operations Active
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
             Autonomous Fleet <span className="text-gradient">Commander</span>
           </h1>
-          <p className="text-sm text-slate-300 leading-relaxed mb-6">
-            Welcome back to the unified multi-agent construction operations console. Real-time plan validation, scheduled risk matrices, and decision-tree tracking are operating optimally.
+          <p className="text-sm text-slate-300 leading-relaxed mb-6 max-w-lg">
+            Welcome back to your unified multi-agent construction hub. Real-time schedule validation, hazard matrices, and decision-tree tracking are operating optimally.
           </p>
 
           <div className="flex flex-wrap gap-4">
             <Link
               href="/planner"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-sky-500/25 hover:opacity-95 transition-all hover:scale-[1.02]"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-sky-500/25 hover:opacity-95 transition-all"
             >
               <Sparkles className="w-4 h-4" />
               Launch AI Studio
@@ -119,6 +129,18 @@ export default function Dashboard() {
               <Plus className="w-4 h-4 text-sky-400" />
               Manual Blueprint
             </button>
+          </div>
+        </div>
+
+        {/* Dynamic Metric Telemetry Cluster Floating on banner */}
+        <div className="hidden lg:flex flex-col items-end gap-2 relative z-10 font-mono text-[10px] text-slate-500 tracking-wider uppercase">
+          <div className="flex items-center gap-1.5 bg-black/40 border border-white/5 px-3 py-1.5 rounded-lg backdrop-blur-md">
+            <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+            Node 01 / Operational
+          </div>
+          <div className="flex items-center gap-1.5 bg-black/40 border border-white/5 px-3 py-1.5 rounded-lg backdrop-blur-md">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            Gemini API Synced
           </div>
         </div>
       </div>
