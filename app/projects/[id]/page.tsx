@@ -83,16 +83,38 @@ export default function ProjectCommanderPage() {
     }
   };
 
-  const triggerAgentIntervention = (agentName: string) => {
+  const triggerAgentIntervention = async (agentName: string) => {
     setAgentTriggering(agentName);
-    setAgentFeedback(`[Agentic Protocol Initiated]: ${agentName} handler analyzing infrastructure footprint layers...`);
+    const type = agentName === "Scheduler Protocol" ? "tasks" : "risks";
+    
+    setAgentFeedback(`[Agentic Protocol Initiated]: Running live ${agentName} matrix analyzer...`);
 
-    setTimeout(() => {
-      setAgentFeedback(
-        `[Agentic Protocol Success]: ${agentName} has successfully optimized operational matrix parameters. No immediate critical failure states detected.`
-      );
+    try {
+      const res = await fetch(`/api/projects/${id}/optimize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type }),
+      });
+
+      if (res.ok) {
+        setTimeout(async () => {
+          await fetchProjectDetail();
+          setAgentFeedback(
+            `[Agentic Protocol Success]: ${agentName} has injected live parameters. View grid populated successfully!`
+          );
+          setAgentTriggering(null);
+          
+          // Automatically switch active tab to matching generated item
+          setActiveTab(type === "tasks" ? "tasks" : "risks");
+        }, 1500);
+      } else {
+        setAgentFeedback(`[Agentic Error]: Optimization pipeline failed to commit entries.`);
+        setAgentTriggering(null);
+      }
+    } catch (err) {
+      setAgentFeedback(`[Network Error]: Unable to reach Agent Controller node.`);
       setAgentTriggering(null);
-    }, 2000);
+    }
   };
 
   if (loading) {
