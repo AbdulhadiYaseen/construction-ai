@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model Project {
@@ -46,4 +45,12 @@ model Decision {
 
   projectId Int
   project   Project @relation(fields: [projectId], references: [id])
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  name        String
+  createdAt   DateTime @default(now())
 }
