@@ -33,6 +33,7 @@ export async function POST(req: Request) {
         name: body.name,
         description: body.project,
         status: "Planning",
+        userId,
         tasks: {
           create: tasks
         },

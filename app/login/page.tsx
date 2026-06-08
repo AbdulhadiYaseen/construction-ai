@@ -59,7 +59,7 @@ export default function LoginPage() {
               Welcome <span className="text-gradient">Back</span>
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Access the Constructify multi-agent intelligence command center
+              Access your construction dashboard
             </p>
           </div>
 
@@ -72,14 +72,14 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4 relative z-10 w-full">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                System Identity Email
+                Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="email"
                   required
-                  placeholder="commander@constructify.ai"
+                  placeholder="alex@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 transition-colors"
@@ -89,7 +89,7 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Access Key Phrase
+                Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -112,11 +112,11 @@ export default function LoginPage() {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-sky-200" />
-                  Authorizing Core...
+                  Logging in...
                 </>
               ) : (
                 <>
-                  Login System
+                  Log In
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -125,9 +125,9 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-5 border-t border-white/5 relative z-10">
             <p className="text-xs text-slate-500">
-              Don&apos;t have an operative account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/signup" className="text-sky-400 hover:text-sky-300 font-bold transition-colors">
-                Register Footprint
+                Sign Up
               </Link>
             </p>
           </div>

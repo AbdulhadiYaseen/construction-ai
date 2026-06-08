@@ -25,11 +25,11 @@ export async function POST(req: Request, context: any) {
       return NextResponse.json({ success: false, error: "Invalid entity identifier" }, { status: 400 });
     }
 
-    // Retrieve project details along with existing entries for dynamic contextual planning
-    const project = await prisma.project.findUnique({
-      where: { id: projectId },
-      select: { 
-        name: true, 
+
+    const project = await prisma.project.findFirst({
+      where: { id: projectId, userId },
+      select: {
+        name: true,
         description: true,
         risks: { select: { riskType: true } },
         tasks: { select: { title: true } }

@@ -13,9 +13,11 @@ export async function GET() {
     }
 
     const projects = await prisma.project.findMany({
+      where: { userId: userId },
       orderBy: {
         createdAt: "desc",
       },
+
       include: {
         _count: {
           select: {
@@ -53,7 +55,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { success: false, error: "Project name is required" },
         { status: 400 }
-    );
+      );
     }
 
     const project = await prisma.project.create({
@@ -61,6 +63,7 @@ export async function POST(req: Request) {
         name,
         description: description || "",
         status: "Active",
+        userId,
       },
       include: {
         _count: {

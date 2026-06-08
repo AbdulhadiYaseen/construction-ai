@@ -193,12 +193,12 @@ export default function AIStudioPage() {
             <form onSubmit={handleGenerate} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-400 mb-1.5">
-                  Footprint Designation
+                  Project Name
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Nexus Logistical Terminal"
+                  placeholder="e.g. Seaside Hotel"
                   value={projectName}
                   onChange={(e) => {
                     setProjectName(e.target.value);
@@ -210,12 +210,12 @@ export default function AIStudioPage() {
 
               <div>
                 <label className="block text-xs font-semibold text-slate-400 mb-1.5">
-                  Operational Parameters & Scope
+                  Project Scope & Description
                 </label>
                 <textarea
                   required
                   rows={6}
-                  placeholder="Describe building scope, structural layer constraints, specific agent goals, or environmental concerns..."
+                  placeholder="Describe the building size, location, and any safety or construction requirements..."
                   value={projectDescription}
                   onChange={(e) => {
                     setProjectDescription(e.target.value);

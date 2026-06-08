@@ -32,7 +32,7 @@ export async function PATCH(
 
     // Commit operational state transition directly onto the database engine
     const updatedTask = await prisma.task.update({
-      where: { id },
+      where: { id, project: { userId } },
       data: { status },
     });
 

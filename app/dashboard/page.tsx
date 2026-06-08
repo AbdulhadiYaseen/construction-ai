@@ -174,7 +174,7 @@ export default function Dashboard() {
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-extrabold text-white">{activeProjects}</span>
-            <span className="text-[10px] text-slate-500">footprints</span>
+            <span className="text-[10px] text-slate-500">projects</span>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-500/40 to-transparent" />
         </div>
@@ -214,8 +214,8 @@ export default function Dashboard() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Active Footprints</h2>
-            <p className="text-xs text-slate-400">Current operational infrastructure managed by custom AI handlers</p>
+            <h2 className="text-xl font-bold text-white tracking-tight">Active Projects</h2>
+            <p className="text-xs text-slate-400">Current construction projects managed by AI agents</p>
           </div>
 
           <Link
@@ -238,7 +238,7 @@ export default function Dashboard() {
             <FolderKanban className="w-12 h-12 text-slate-600 mx-auto mb-4 animate-float" />
             <h3 className="font-bold text-base text-slate-300 mb-1">No Construction Projects Initialized</h3>
             <p className="text-xs text-slate-500 mb-6 leading-relaxed">
-              Start by launching the multi-agent AI Studio to generate complex operational layers autonomously, or configure a basic footprint manually.
+              Start by launching the multi-agent AI Studio to generate complex operational layers autonomously, or configure a basic project manually.
             </p>
             <Link
               href="/planner"
@@ -261,8 +261,8 @@ export default function Dashboard() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className="glass-panel rounded-3xl max-w-md w-full p-6 border border-white/10 shadow-2xl relative">
-            <h3 className="text-lg font-bold text-white mb-2">Configure Manual Footprint</h3>
-            <p className="text-xs text-slate-400 mb-6">Initialize a base structural layer for agents to augment subsequently.</p>
+            <h3 className="text-lg font-bold text-white mb-2">Create Manual Project</h3>
+            <p className="text-xs text-slate-400 mb-6">Initialize a base project profile for AI agents to customize.</p>
 
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div>
@@ -278,10 +278,10 @@ export default function Dashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Structural Overview</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Project Description</label>
                 <textarea
                   rows={4}
-                  placeholder="Briefly describe operational scale, timeline constraint, or zoning attributes..."
+                  placeholder="Briefly describe the project scope, timeline, and key details..."
                   value={newProjectDesc}
                   onChange={(e) => setNewProjectDesc(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-sky-500"
@@ -301,7 +301,7 @@ export default function Dashboard() {
                   disabled={creating}
                   className="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-xs font-bold text-white shadow-lg shadow-sky-500/20 hover:opacity-90 transition-all disabled:opacity-50"
                 >
-                  {creating ? "Instantiating..." : "Create Layer"}
+                  {creating ? "Creating..." : "Create Project"}
                 </button>
               </div>
             </form>

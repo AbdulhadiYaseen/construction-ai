@@ -60,7 +60,7 @@ export default function SignupPage() {
               Create <span className="text-gradient">Account</span>
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Instantiate your administrative operator credentials
+              Create your account credentials
             </p>
           </div>
 
@@ -73,14 +73,14 @@ export default function SignupPage() {
           <form onSubmit={handleSignup} className="space-y-4 relative z-10 w-full">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Operator Full Name
+                Full Name
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Commander Alex"
+                  placeholder="e.g. Alex Smith"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
@@ -90,14 +90,14 @@ export default function SignupPage() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Primary Communication Email
+                Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="email"
                   required
-                  placeholder="alex@constructify.ai"
+                  placeholder="alex@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
@@ -107,7 +107,7 @@ export default function SignupPage() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Secure Secret Phrase
+                Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -130,11 +130,11 @@ export default function SignupPage() {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-indigo-200" />
-                  Sealing Vault JWT...
+                  Creating Account...
                 </>
               ) : (
                 <>
-                  Initialize Operator
+                  Sign Up
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -143,9 +143,9 @@ export default function SignupPage() {
 
           <div className="mt-8 pt-5 border-t border-white/5 relative z-10">
             <p className="text-xs text-slate-500">
-              Already registered as an operative?{" "}
+              Already have an account?{" "}
               <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-bold transition-colors">
-                Return to Vault Login
+                Log In
               </Link>
             </p>
           </div>

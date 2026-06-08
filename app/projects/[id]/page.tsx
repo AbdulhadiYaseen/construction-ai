@@ -87,10 +87,10 @@ function ProjectCommanderPageContent() {
       if (data.success) {
         setProject(data.project);
       } else {
-        setError(data.error || "Footprint record not found");
+        setError(data.error || "Project record not found");
       }
     } catch (err) {
-      setError("Network error fetching footprint state");
+      setError("Network error fetching project state");
     } finally {
       setLoading(false);
     }
@@ -219,13 +219,13 @@ function ProjectCommanderPageContent() {
           className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
-          Directory Inventory
+          Project Directory
         </Link>
 
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-slate-500 font-medium">Footprint Hash:</span>
+          <span className="text-[11px] text-slate-500 font-medium">Project ID:</span>
           <code className="bg-white/[0.03] px-2 py-0.5 rounded text-[11px] text-sky-400 font-mono">
-            BLD-OP-{project.id}
+            PRJ-{project.id}
           </code>
         </div>
       </div>
@@ -248,7 +248,7 @@ function ProjectCommanderPageContent() {
               {project.name}
             </h1>
             <p className="text-xs text-slate-300 leading-relaxed">
-              {project.description || "No structural summary records bound to this ID footprint."}
+              {project.description || "No structural summary records bound to this project ID."}
             </p>
           </div>
 

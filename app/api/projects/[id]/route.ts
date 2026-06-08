@@ -73,12 +73,11 @@ export async function DELETE(
       );
     }
 
-    // Relational Atomic Cascade deletion via Transaction to bypass missing Prisma onDelete constraint
     await prisma.$transaction([
-      prisma.task.deleteMany({ where: { projectId: id } }),
-      prisma.risk.deleteMany({ where: { projectId: id } }),
-      prisma.decision.deleteMany({ where: { projectId: id } }),
-      prisma.project.deleteMany({ where: { id } })
+      prisma.task.deleteMany({ where: { projectId: id, project: { userId } } }),
+      prisma.risk.deleteMany({ where: { projectId: id, project: { userId } } }),
+      prisma.decision.deleteMany({ where: { projectId: id, project: { userId } } }),
+      prisma.project.deleteMany({ where: { id, userId } })
     ]);
 
     return NextResponse.json({ success: true, message: "Project deleted successfully" });

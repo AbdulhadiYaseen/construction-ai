@@ -23,6 +23,7 @@ export async function GET(req: Request) {
     const [projects, tasks] = await Promise.all([
       prisma.project.findMany({
         where: {
+          userId,
           OR: [
             { name: { contains: query } },
             { description: { contains: query } }
@@ -37,6 +38,7 @@ export async function GET(req: Request) {
       }),
       prisma.task.findMany({
         where: {
+          project: { userId },
           title: { contains: query }
         },
         take: 5,
