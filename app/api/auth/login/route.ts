@@ -48,11 +48,14 @@ export async function POST(req: Request) {
       { expiresIn: "7d" }
     );
 
-    // Assign session cookie
+    // Assign session cookie.
+    // `secure` is opt-in via COOKIE_SECURE so the cookie still works on the
+    // current HTTP-only deployment (browsers drop Secure cookies over HTTP).
+    // Set COOKIE_SECURE=true once the site is served over HTTPS.
     (await cookies()).set("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.COOKIE_SECURE === "true",
+      sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
