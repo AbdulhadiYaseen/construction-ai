@@ -13,6 +13,9 @@ model Project {
   status      String
   createdAt   DateTime @default(now())
 
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+
   tasks        Task[]
   risks        Risk[]
   decisions    Decision[]
@@ -53,4 +56,6 @@ model User {
   password    String
   name        String
   createdAt   DateTime @default(now())
+
+  projects    Project[]
 }
