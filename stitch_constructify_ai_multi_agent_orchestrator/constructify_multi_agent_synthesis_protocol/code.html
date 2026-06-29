@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Constructify | Multi-Agent Synthesis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(26, 29, 35, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .agent-pulse {
+            position: relative;
+        }
+        .agent-pulse::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: inherit;
+            border: 2px solid currentColor;
+            opacity: 0;
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 0; }
+        }
+        .flow-line {
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            background-size: 200% 100%;
+            animation: flow-move 3s linear infinite;
+        }
+        @keyframes flow-move {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#00354c",
+                      "on-surface": "#e2e2e8",
+                      "error": "#ffb4ab",
+                      "outline-variant": "#5a4136",
+                      "agent-decision": "#10B981",
+                      "inverse-on-surface": "#2f3035",
+                      "on-primary-fixed-variant": "#7a3000",
+                      "on-secondary-fixed-variant": "#004f51",
+                      "surface-variant": "#333539",
+                      "surface-container-lowest": "#0c0e12",
+                      "on-tertiary": "#00344b",
+                      "secondary-container": "#006466",
+                      "agent-risk": "#F43F5E",
+                      "primary-container": "#ff6b00",
+                      "surface-bright": "#37393e",
+                      "surface-elevated": "#1A1D23",
+                      "on-primary": "#561f00",
+                      "surface-container-highest": "#333539",
+                      "tertiary": "#83cfff",
+                      "on-background": "#e2e2e8",
+                      "logistics-risk": "#EAB308",
+                      "surface-container-low": "#1a1c20",
+                      "safety-risk": "#EE4444",
+                      "agent-planner": "#A855F7",
+                      "on-tertiary-fixed-variant": "#004c6b",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#83cfff",
+                      "surface-container-high": "#282a2e",
+                      "inverse-surface": "#e2e2e8",
+                      "surface-dim": "#111317",
+                      "surface-glass": "rgba(26, 29, 35, 0.7)",
+                      "secondary-fixed-dim": "#87d3d5",
+                      "primary-fixed": "#ffdbcc",
+                      "error-container": "#93000a",
+                      "inverse-primary": "#a04100",
+                      "on-primary-fixed": "#351000",
+                      "tertiary-fixed": "#c6e7ff",
+                      "agent-scheduler": "#3B82F6",
+                      "on-secondary-container": "#92dee0",
+                      "on-secondary": "#003738",
+                      "on-primary-container": "#572000",
+                      "env-risk": "#22C55E",
+                      "background": "#111317",
+                      "surface-container": "#1e2024",
+                      "surface-tint": "#ffb693",
+                      "secondary-fixed": "#a3f0f1",
+                      "primary-fixed-dim": "#ffb693",
+                      "on-tertiary-fixed": "#001e2d",
+                      "secondary": "#87d3d5",
+                      "on-error": "#690005",
+                      "on-secondary-fixed": "#002021",
+                      "on-surface-variant": "#e2bfb0",
+                      "tertiary-container": "#00a3e1",
+                      "outline": "#a98a7d",
+                      "surface": "#111317",
+                      "primary": "#ffb693"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-edge": "32px",
+                      "stack-md": "16px",
+                      "stack-sm": "8px",
+                      "gutter": "24px",
+                      "container-max": "1440px",
+                      "stack-lg": "32px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"],
+                      "display-lg": ["Hanken Grotesk"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "agent-tag": ["JetBrains Mono"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "body-sm": ["Inter"],
+                      "label-caps": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                      "agent-tag": ["11px", {"lineHeight": "12px", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-stack-lg bg-surface-container-low border-r border-white/10 w-64 z-[60]">
+<div class="px-6 mb-10">
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">Constructify</h1>
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">Site Alpha-9 • AI Core</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 font-medium text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 font-bold text-primary border-r-2 border-primary bg-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">hub</span>
+<span class="font-label-caps text-label-caps">Agent Synthesis</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 font-medium text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">security</span>
+<span class="font-label-caps text-label-caps">Risk &amp; Compliance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 font-medium text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<span class="font-label-caps text-label-caps">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 font-medium text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">groups</span>
+<span class="font-label-caps text-label-caps">Team</span>
+</a>
+</nav>
+<div class="px-3 mt-auto space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 font-medium text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 font-medium text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">help</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+<div class="p-4 mt-4 bg-surface-variant/30 rounded-lg">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">bolt</span>
+</div>
+<div>
+<p class="font-label-caps text-[10px] text-white">PRO MODE</p>
+<p class="text-[11px] text-on-surface-variant">Active Instance</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-on-primary font-bold text-[12px] rounded uppercase tracking-wider hover:opacity-90 transition-opacity">Request Demo</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="h-16 flex justify-between items-center px-margin-edge sticky top-0 z-50 bg-surface-glass backdrop-blur-md border-b border-white/10">
+<div class="flex items-center gap-stack-md">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">search</span>
+<input class="bg-surface-container-high border-none text-body-sm pl-10 pr-4 py-1.5 rounded-lg w-64 focus:ring-1 focus:ring-primary" placeholder="Search synthesis logs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded font-bold text-body-sm hover:opacity-90 transition-all">Deploy Agent</button>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">history_edu</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">account_tree</span></button>
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution headshot of a construction project manager in a tech-focused dark mode environment. The person is wearing a sleek dark suit with a subtle orange lapel pin. The background is a soft-focus architectural drafting studio with glowing blue holograms of skyscraper frameworks. The lighting is dramatic, high-contrast, reflecting the authoritative yet modern brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxv3p0lTb65sMc9-G9yORT8LZN97sMzUez9h7x8udayAznR2JxdO2LLHlFqpEjhIiGXBY-XBfPnsv2Hj5hA_ly3JT0A06Xx1_63HwzX4IHRlhz-odE8fI8276fZm8ajtEeRyIxkHpEz971KHBSfJLGuLZtwHu0a_5qsGSBOE_kocCo05Dz84hiRYxGcofBQWyacW_9C7fG8ZFdn6pjmqsc8ihp-cMh74GA1MpcYOVLR2N_KZI5FqOodASmCnZN8_3wrfkxcGwlww4"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Synthesis Canvas -->
+<section class="p-margin-edge flex-1 space-y-gutter">
+<!-- Hero Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-white mb-1">A2A Handshake Synthesis</h2>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-agent-decision animate-pulse"></span>
+                        Live Neural Orchestration between 4 Active Agents
+                    </p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded text-xs font-medium text-on-surface-variant border border-white/5">Local MCP Server: Connected</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-xs font-medium text-on-surface-variant border border-white/5">Latency: 14ms</span>
+</div>
+</div>
+<!-- Handshake Flowchart Container -->
+<div class="grid grid-cols-12 gap-gutter min-h-[500px]">
+<!-- Interaction Diagram (Bento Styled) -->
+<div class="col-span-12 lg:col-span-8 glass-panel rounded-xl p-8 relative overflow-hidden flex items-center justify-center">
+<!-- Background Grid Effect -->
+<div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0); background-size: 24px 24px;"></div>
+<!-- Flow Nodes -->
+<div class="relative w-full max-w-4xl grid grid-cols-4 gap-4 z-10">
+<!-- Planner Agent -->
+<div class="flex flex-col items-center">
+<div class="w-20 h-20 rounded-2xl bg-agent-planner/20 border border-agent-planner flex items-center justify-center agent-pulse text-agent-planner mb-4">
+<span class="material-symbols-outlined text-4xl">architecture</span>
+</div>
+<div class="text-center">
+<p class="font-agent-tag text-agent-tag text-agent-planner uppercase tracking-widest mb-1">Planner</p>
+<p class="font-headline-md text-sm text-white font-bold">Operational Baseline</p>
+</div>
+</div>
+<!-- Connector 1 -->
+<div class="flex items-center justify-center -mx-4 h-20 self-start mt-0">
+<div class="w-full h-px flow-line text-agent-planner/50"></div>
+<span class="material-symbols-outlined text-agent-planner/50 text-sm">arrow_forward_ios</span>
+</div>
+<!-- Risk Agent -->
+<div class="flex flex-col items-center">
+<div class="w-20 h-20 rounded-2xl bg-agent-risk/20 border border-agent-risk flex items-center justify-center agent-pulse text-agent-risk mb-4">
+<span class="material-symbols-outlined text-4xl">warning</span>
+</div>
+<div class="text-center">
+<p class="font-agent-tag text-agent-tag text-agent-risk uppercase tracking-widest mb-1">Risk Analyst</p>
+<p class="font-headline-md text-sm text-white font-bold">Local MCP: Hazard Scan</p>
+</div>
+</div>
+<!-- Connector 2 -->
+<div class="flex items-center justify-center -mx-4 h-20 self-start mt-0">
+<div class="w-full h-px flow-line text-agent-risk/50"></div>
+<span class="material-symbols-outlined text-agent-risk/50 text-sm">arrow_forward_ios</span>
+</div>
+<!-- Scheduler Agent -->
+<div class="flex flex-col items-center col-start-1 row-start-2 mt-8">
+<div class="w-20 h-20 rounded-2xl bg-agent-scheduler/20 border border-agent-scheduler flex items-center justify-center agent-pulse text-agent-scheduler mb-4">
+<span class="material-symbols-outlined text-4xl">event_upcoming</span>
+</div>
+<div class="text-center">
+<p class="font-agent-tag text-agent-tag text-agent-scheduler uppercase tracking-widest mb-1">Scheduler</p>
+<p class="font-headline-md text-sm text-white font-bold">Timeline Optimization</p>
+</div>
+</div>
+<!-- Intercept Path -->
+<div class="col-span-2 row-start-2 flex items-center justify-center relative mt-8">
+<div class="absolute w-1/2 h-20 border-l-2 border-b-2 border-dashed border-on-surface-variant/20 -top-10 left-0 rounded-bl-3xl"></div>
+<div class="bg-surface-elevated border border-white/10 px-4 py-2 rounded text-[10px] font-label-caps text-on-surface-variant z-20">
+                                SYNTHESIS HANDSHAKE
+                            </div>
+</div>
+<!-- Ethics Interceptor -->
+<div class="flex flex-col items-center row-start-2 mt-8">
+<div class="w-20 h-20 rounded-2xl bg-agent-decision/20 border border-agent-decision flex items-center justify-center agent-pulse text-agent-decision mb-4">
+<span class="material-symbols-outlined text-4xl">gavel</span>
+</div>
+<div class="text-center">
+<p class="font-agent-tag text-agent-tag text-agent-decision uppercase tracking-widest mb-1">Interceptor</p>
+<p class="font-headline-md text-sm text-white font-bold">USCG &amp; Safety Audit</p>
+</div>
+</div>
+</div>
+<!-- Flow Label Overlays -->
+<div class="absolute bottom-6 left-6 right-6 flex justify-between">
+<div class="flex items-center gap-3 bg-surface-container-high/80 p-3 rounded-lg border border-white/5">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">thunderstorm</span>
+</div>
+<div>
+<p class="text-[10px] font-label-caps text-on-surface-variant">Current Risk Input</p>
+<p class="text-[12px] font-bold text-white">Concrete Pour Validation Pending</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/80 p-3 rounded-lg border border-white/5">
+<div class="w-8 h-8 rounded bg-agent-decision/10 flex items-center justify-center text-agent-decision">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</div>
+<div>
+<p class="text-[10px] font-label-caps text-on-surface-variant">Ethics Output</p>
+<p class="text-[12px] font-bold text-white">Compliant with OSHA 1926</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Coordination Feed -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Feed Panel -->
+<div class="flex-1 glass-panel rounded-xl overflow-hidden flex flex-col">
+<div class="p-4 border-b border-white/10 flex justify-between items-center bg-surface-container-high">
+<h3 class="font-label-caps text-label-caps text-white">Live Coordination Feed</h3>
+<span class="flex items-center gap-1.5 text-[10px] text-agent-decision">
+<span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                DATA_STREAMING
+                            </span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4 font-agent-tag text-[11px]" id="feed-container">
+<!-- Feed Items -->
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-agent-planner opacity-70">
+<span class="material-symbols-outlined text-[14px]">architecture</span>
+<span>PLANNER_01 -&gt; BROADCAST</span>
+</div>
+<div class="pl-5 text-on-surface-variant bg-white/5 p-2 rounded">
+                                    POST_PLAN: "Section B Concrete Pour - Phase 1"
+                                </div>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-agent-risk opacity-70">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span>RISK_01 -&gt; MCP_SERVER</span>
+</div>
+<div class="pl-5 text-on-surface-variant bg-white/5 p-2 rounded">
+                                    CALL: get_weather_risk(lat: 29.7, long: -95.3)<br/>
+                                    RESPONSE: { humidity: 88%, precip_prob: 62%, temp: 84F }
+                                </div>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-agent-risk opacity-70">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>RISK_01 -&gt; SCHEDULER_01</span>
+</div>
+<div class="pl-5 text-agent-risk bg-agent-risk/10 p-2 rounded border border-agent-risk/20">
+                                    FLAG: "Rain threshold exceeded. validate_concrete_pour: FAILED."
+                                </div>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-agent-scheduler opacity-70">
+<span class="material-symbols-outlined text-[14px]">event_upcoming</span>
+<span>SCHEDULER_01 -&gt; PLANNER_01</span>
+</div>
+<div class="pl-5 text-on-surface-variant bg-white/5 p-2 rounded">
+                                    RE-OPTIMIZING: Delaying pour 4.5h. New ETA: 04:00 Zulu.
+                                </div>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-agent-decision opacity-70">
+<span class="material-symbols-outlined text-[14px]">gavel</span>
+<span>ETHICS_INT -&gt; GLOBAL</span>
+</div>
+<div class="pl-5 text-agent-decision bg-agent-decision/10 p-2 rounded border border-agent-decision/20">
+                                    AUDIT: Labor safety hours compliant. USCG 33 CFR checked. OK.
+                                </div>
+</div>
+</div>
+</div>
+<!-- Micro Stats -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-xl border-l-2 border-primary">
+<p class="font-label-caps text-[10px] text-on-surface-variant mb-1">Active Handshakes</p>
+<p class="font-headline-md text-xl text-white">1,204</p>
+</div>
+<div class="glass-panel p-4 rounded-xl border-l-2 border-agent-decision">
+<p class="font-label-caps text-[10px] text-on-surface-variant mb-1">Safety Override</p>
+<p class="font-headline-md text-xl text-white">0.00%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Contextual Data Layer -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Weather MCP Context -->
+<div class="glass-panel rounded-xl p-stack-md">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-logistics-risk">cloud_sync</span>
+<h4 class="font-label-caps text-label-caps text-white">MCP weather Context</h4>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-on-surface-variant">Wind Speed</span>
+<span class="text-white">18.4 kt (NE)</span>
+</div>
+<div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+<div class="bg-logistics-risk h-full w-[65%]"></div>
+</div>
+<div class="flex justify-between text-xs pt-2">
+<span class="text-on-surface-variant">Visibility</span>
+<span class="text-white">Clear (9.2mi)</span>
+</div>
+<div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+<div class="bg-agent-decision h-full w-[90%]"></div>
+</div>
+</div>
+</div>
+<!-- Compliance Checklist -->
+<div class="glass-panel rounded-xl p-stack-md">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-agent-decision">verified</span>
+<h4 class="font-label-caps text-label-caps text-white">Compliance Synthesis</h4>
+</div>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-xs text-on-surface">
+<span class="material-symbols-outlined text-agent-decision text-[14px]">check_circle</span>
+                            USCG Navigable Waters Permit #A9
+                        </li>
+<li class="flex items-center gap-2 text-xs text-on-surface">
+<span class="material-symbols-outlined text-agent-decision text-[14px]">check_circle</span>
+                            OSHA Overtime Cap Validation
+                        </li>
+<li class="flex items-center gap-2 text-xs text-on-surface">
+<span class="material-symbols-outlined text-agent-risk text-[14px]">pending</span>
+                            Environmental EPA Runoff Audit (In Queue)
+                        </li>
+</ul>
+</div>
+<!-- Resource Load -->
+<div class="glass-panel rounded-xl p-stack-md">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h4 class="font-label-caps text-label-caps text-white">Compute Allocation</h4>
+</div>
+<div class="flex items-end gap-1 h-12">
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[40%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[60%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[85%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[30%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[90%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[45%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors h-[70%] rounded-t"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-3 text-center">Neural Load Optimization: 82% Efficiency</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-stack-lg px-margin-edge flex flex-col md:flex-row justify-between items-center gap-stack-md border-t border-white/5 bg-surface-container-lowest mt-auto">
+<div class="flex flex-col items-center md:items-start gap-1">
+<p class="font-headline-md text-sm text-on-surface font-bold">Constructify AI Orchestration</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 Constructify AI Orchestration. All rights reserved.</p>
+</div>
+<div class="flex gap-stack-lg">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">Ethical Guardrails</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">API Documentation</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">Contact</a>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction for feed streaming
+        const feedContainer = document.getElementById('feed-container');
+        const logs = [
+            { agent: 'PLANNER', color: 'text-agent-planner', icon: 'architecture', msg: 'VALIDATING: Section C Girder installation prerequisites.' },
+            { agent: 'RISK', color: 'text-agent-risk', icon: 'warning', msg: 'SCAN: Analyzing structural tension sensor MCP data.' },
+            { agent: 'SCHEDULER', color: 'text-agent-scheduler', icon: 'event_upcoming', msg: 'ADJUSTING: Crane downtime window shifted to 14:00.' },
+            { agent: 'INTERCEPTOR', color: 'text-agent-decision', icon: 'gavel', msg: 'VERIFIED: Operator shift overlap adheres to labor law.' }
+        ];
+
+        function addLog() {
+            const log = logs[Math.floor(Math.random() * logs.length)];
+            const div = document.createElement('div');
+            div.className = 'space-y-1 animate-in fade-in slide-in-from-right duration-500';
+            div.innerHTML = `
+                <div class="flex items-center gap-2 ${log.color} opacity-70">
+                    <span class="material-symbols-outlined text-[14px]">${log.icon}</span>
+                    <span>${log.agent}_${Math.floor(Math.random()*99)} -> SYNC</span>
+                </div>
+                <div class="pl-5 text-on-surface-variant bg-white/5 p-2 rounded">
+                    ${log.msg}
+                </div>
+            `;
+            feedContainer.prepend(div);
+            if (feedContainer.children.length > 8) {
+                feedContainer.removeChild(feedContainer.lastChild);
+            }
+        }
+
+        setInterval(addLog, 4000);
+    </script>
+</body></html>

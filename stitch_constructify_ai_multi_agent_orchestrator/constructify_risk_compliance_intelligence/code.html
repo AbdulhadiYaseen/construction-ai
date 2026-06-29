@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Constructify | Risk &amp; Compliance Log</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #111317;
+            color: #e2e2e8;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-surface {
+            background: rgba(26, 29, 35, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .inner-glow-primary {
+            box-shadow: inset 0 0 12px rgba(255, 182, 147, 0.05);
+        }
+        .risk-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        /* Custom scrollbar for high-density tables */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0c0e12; }
+        ::-webkit-scrollbar-thumb { background: #333539; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ffb693; }
+    </style>
+<!-- Tailwind Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#00354c",
+                        "on-surface": "#e2e2e8",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#5a4136",
+                        "agent-decision": "#10B981",
+                        "inverse-on-surface": "#2f3035",
+                        "on-primary-fixed-variant": "#7a3000",
+                        "on-secondary-fixed-variant": "#004f51",
+                        "surface-variant": "#333539",
+                        "surface-container-lowest": "#0c0e12",
+                        "on-tertiary": "#00344b",
+                        "secondary-container": "#006466",
+                        "agent-risk": "#F43F5E",
+                        "primary-container": "#ff6b00",
+                        "surface-bright": "#37393e",
+                        "surface-elevated": "#1A1D23",
+                        "on-primary": "#561f00",
+                        "surface-container-highest": "#333539",
+                        "tertiary": "#83cfff",
+                        "on-background": "#e2e2e8",
+                        "logistics-risk": "#EAB308",
+                        "surface-container-low": "#1a1c20",
+                        "safety-risk": "#EE4444",
+                        "agent-planner": "#A855F7",
+                        "on-tertiary-fixed-variant": "#004c6b",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#83cfff",
+                        "surface-container-high": "#282a2e",
+                        "inverse-surface": "#e2e2e8",
+                        "surface-dim": "#111317",
+                        "surface-glass": "rgba(26, 29, 35, 0.7)",
+                        "secondary-fixed-dim": "#87d3d5",
+                        "primary-fixed": "#ffdbcc",
+                        "error-container": "#93000a",
+                        "inverse-primary": "#a04100",
+                        "on-primary-fixed": "#351000",
+                        "tertiary-fixed": "#c6e7ff",
+                        "agent-scheduler": "#3B82F6",
+                        "on-secondary-container": "#92dee0",
+                        "on-secondary": "#003738",
+                        "on-primary-container": "#572000",
+                        "env-risk": "#22C55E",
+                        "background": "#111317",
+                        "surface-container": "#1e2024",
+                        "surface-tint": "#ffb693",
+                        "secondary-fixed": "#a3f0f1",
+                        "primary-fixed-dim": "#ffb693",
+                        "on-tertiary-fixed": "#001e2d",
+                        "secondary": "#87d3d5",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#002021",
+                        "on-surface-variant": "#e2bfb0",
+                        "tertiary-container": "#00a3e1",
+                        "outline": "#a98a7d",
+                        "surface": "#111317",
+                        "primary": "#ffb693"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-edge": "32px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "stack-lg": "32px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "agent-tag": ["JetBrains Mono"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["JetBrains Mono"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="flex flex-col min-h-screen bg-background">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-edge h-16 bg-surface-glass backdrop-blur-md border-b border-white/10">
+<div class="flex items-center gap-stack-md">
+<span class="font-headline-md text-headline-md font-extrabold text-primary">Constructify</span>
+<div class="hidden md:flex items-center px-4 h-9 bg-surface-container-high rounded border border-white/5 ml-4">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none text-body-sm focus:ring-0 text-on-surface w-64" placeholder="Search Risk Audit Logs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-gutter">
+<div class="hidden lg:flex gap-stack-md">
+<button class="flex items-center gap-1 text-primary font-bold transition-all hover:opacity-80">
+<span class="material-symbols-outlined text-[18px]" data-icon="notifications">notifications</span>
+</button>
+<button class="flex items-center gap-1 text-on-surface-variant transition-all hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="history_edu">history_edu</span>
+</button>
+<button class="flex items-center gap-1 text-on-surface-variant transition-all hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="account_tree">account_tree</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-4 py-2 rounded font-bold hover:brightness-110 active:opacity-80 transition-all">
+                Deploy Agent
+            </button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female project manager in her 40s wearing a high-visibility tactical construction vest and a headset, set against a blurred background of a modern industrial site. The lighting is crisp and cinematic with subtle blue and orange highlights, reflecting a high-tech corporate construction aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8hdp_4TX09rBhJ7_Fo1G32zi-PWeQNDlY-dEsjnzfUtJAllbs-h9GDVZLGZBJaLj1GmU1KcsI536L6_GB7xTS32TSZrFRtDMX7GTjg3gSO7aghO42_GxUq7rVfrW1jRhvAn9As9pL5tysUoUmVBT1ygWkS0Z4-BO8X9j6K3mm0QafDnXUS62QVa6nR2KMrn2KWVLUyYZyEBkvyo_-ISzRXuYrFXirS_bQe3M-ECm4zTEsDjusz9JX6fmhSanmat0m9NuWfZ5ll1Q"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-stack-lg h-screen w-64 border-r border-white/10 bg-surface-container-low hidden lg:flex z-40 mt-16">
+<div class="px-6 mb-8">
+<h2 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">Constructify</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Site Alpha-9</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span class="font-label-caps text-label-caps uppercase">Agent Synthesis</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-r-2 border-primary bg-surface-variant/30 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="font-label-caps text-label-caps uppercase">Risk &amp; Compliance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps uppercase">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-caps text-label-caps uppercase">Team</span>
+</a>
+</nav>
+<div class="px-4 py-stack-lg border-t border-white/5 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+<div class="mt-6 px-4">
+<button class="w-full bg-surface-variant text-on-surface font-label-caps text-label-caps py-2 border border-white/10 rounded hover:bg-white/10 transition-all">Request Demo</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-64 p-gutter lg:p-stack-lg max-w-container-max mx-auto w-full">
+<!-- Page Header Section -->
+<section class="mb-stack-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<div class="flex items-center gap-stack-sm mb-2">
+<span class="px-2 py-0.5 bg-error-container text-error text-[10px] font-label-caps rounded-sm uppercase">Active Audit</span>
+<span class="text-on-surface-variant text-body-sm font-label-caps">Log ID: R-29384-A9</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Risk &amp; Compliance Intelligence</h1>
+<p class="text-on-surface-variant text-body-md mt-1">Real-time hazard orchestration and regulatory interceptor logs for Site Alpha-9.</p>
+</div>
+<div class="flex gap-stack-sm">
+<button class="bg-surface-container-high border border-white/10 px-4 py-2 rounded text-on-surface text-body-sm font-medium flex items-center gap-2 hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="file_download">file_download</span>
+                            Export Audit Report
+                        </button>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded text-body-sm font-bold flex items-center gap-2 hover:brightness-110">
+<span class="material-symbols-outlined text-[18px]" data-icon="refresh">refresh</span>
+                            Re-Sync Agents
+                        </button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-lg">
+<!-- RAG Compliance Card -->
+<div class="glass-surface p-stack-md rounded-xl flex flex-col justify-between h-40 group hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps uppercase">Overall Compliance</span>
+<span class="material-symbols-outlined text-agent-decision" data-icon="verified">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-on-surface">94.2%</span>
+<span class="text-agent-decision text-body-sm flex items-center">
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_upward">arrow_upward</span> 2.1%
+                        </span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full mt-2 relative overflow-hidden">
+<div class="absolute inset-y-0 left-0 bg-agent-decision" style="width: 94.2%"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant font-label-caps mt-2">OSHA &amp; BUILDING REGS (A-9)</p>
+</div>
+<!-- Safety Risk Card -->
+<div class="glass-surface p-stack-md rounded-xl flex flex-col justify-between h-40 hover:border-safety-risk/30 transition-all">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps uppercase">Critical Hazards</span>
+<span class="material-symbols-outlined text-safety-risk" data-icon="warning">warning</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-on-surface">03</span>
+<span class="text-safety-risk font-label-caps text-[10px] uppercase bg-safety-risk/10 px-1 rounded">Immediate</span>
+</div>
+<div class="flex gap-1 mt-2">
+<div class="h-1 flex-1 bg-safety-risk rounded-full"></div>
+<div class="h-1 flex-1 bg-safety-risk rounded-full"></div>
+<div class="h-1 flex-1 bg-safety-risk rounded-full"></div>
+<div class="h-1 flex-1 bg-surface-container-highest rounded-full"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant font-label-caps mt-2">REQUIRES AGENT INTERVENTION</p>
+</div>
+<!-- Env Impact Card -->
+<div class="glass-surface p-stack-md rounded-xl flex flex-col justify-between h-40 hover:border-env-risk/30 transition-all">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps uppercase">Env Carbon Footprint</span>
+<span class="material-symbols-outlined text-env-risk" data-icon="eco">eco</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-on-surface">Low</span>
+<span class="text-on-surface-variant text-body-sm">Trace</span>
+</div>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-env-risk" style="width: 20%"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant font-label-caps mt-2">COASTAL SITE PROTECTION ACTIVE</p>
+</div>
+<!-- Ethics Guardrail Card -->
+<div class="glass-surface p-stack-md rounded-xl flex flex-col justify-between h-40 hover:border-agent-planner/30 transition-all">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps uppercase">Ethics Intercepts</span>
+<span class="material-symbols-outlined text-agent-planner" data-icon="gavel">gavel</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-on-surface">12</span>
+<span class="text-on-surface-variant text-body-sm">Today</span>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-[14px] text-agent-planner" data-icon="shield">shield</span>
+<span class="text-[10px] text-on-surface font-label-caps">Interceptor Protocol v4.2</span>
+</div>
+<p class="text-[10px] text-on-surface-variant font-label-caps mt-2">AUTONOMOUS GUARDRAIL STATUS</p>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-gutter items-start">
+<!-- Detailed Hazards Table (Left Column) -->
+<div class="xl:col-span-2 space-y-gutter">
+<div class="glass-surface rounded-xl overflow-hidden shadow-2xl">
+<div class="p-stack-md border-b border-white/10 flex justify-between items-center bg-white/2">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="list_alt">list_alt</span>
+                                Identified Hazards Log
+                            </h3>
+<div class="flex gap-stack-sm">
+<button class="px-3 py-1 bg-surface-container-high rounded border border-white/5 text-xs font-label-caps text-on-surface hover:text-primary transition-all">Filter</button>
+<button class="px-3 py-1 bg-surface-container-high rounded border border-white/5 text-xs font-label-caps text-on-surface hover:text-primary transition-all">Sort</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-white/5">
+<th class="px-stack-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Hazard ID</th>
+<th class="px-stack-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Source / Type</th>
+<th class="px-stack-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Severity</th>
+<th class="px-stack-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-stack-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Agent Assigned</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1: Critical Safety -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-stack-md py-4 font-agent-tag text-agent-tag text-primary">HZ-9012</td>
+<td class="px-stack-md py-4">
+<div class="flex flex-col">
+<span class="text-body-sm font-bold text-on-surface">Unsecured Scaffolding Section D</span>
+<span class="text-[10px] text-safety-risk font-label-caps">SAFETY RISK</span>
+</div>
+</td>
+<td class="px-stack-md py-4">
+<span class="flex items-center gap-2 px-2 py-1 bg-safety-risk/10 border border-safety-risk/20 rounded text-[10px] font-bold text-safety-risk uppercase tracking-tighter">
+<span class="risk-dot bg-safety-risk"></span> Critical
+                                            </span>
+</td>
+<td class="px-stack-md py-4">
+<span class="text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-logistics-risk" data-icon="sync">sync</span> In Progress
+                                            </span>
+</td>
+<td class="px-stack-md py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-agent-scheduler flex items-center justify-center text-[10px] text-white font-bold">SCH</div>
+<span class="text-[11px] font-agent-tag text-on-surface-variant">Sched-Bot v4</span>
+</div>
+</td>
+</tr>
+<!-- Row 2: High Environmental -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-stack-md py-4 font-agent-tag text-agent-tag text-primary">HZ-8831</td>
+<td class="px-stack-md py-4">
+<div class="flex flex-col">
+<span class="text-body-sm font-bold text-on-surface">Excess Runoff Near Sector 3</span>
+<span class="text-[10px] text-env-risk font-label-caps">ENVIRONMENTAL</span>
+</div>
+</td>
+<td class="px-stack-md py-4">
+<span class="flex items-center gap-2 px-2 py-1 bg-primary-container/10 border border-primary-container/20 rounded text-[10px] font-bold text-primary-container uppercase tracking-tighter">
+<span class="risk-dot bg-primary-container"></span> High
+                                            </span>
+</td>
+<td class="px-stack-md py-4">
+<span class="text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-agent-decision" data-icon="check_circle">check_circle</span> Mitigated
+                                            </span>
+</td>
+<td class="px-stack-md py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-agent-planner flex items-center justify-center text-[10px] text-white font-bold">PLN</div>
+<span class="text-[11px] font-agent-tag text-on-surface-variant">Eco-Watch AI</span>
+</div>
+</td>
+</tr>
+<!-- Row 3: Medium Logistical -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-stack-md py-4 font-agent-tag text-agent-tag text-primary">HZ-8521</td>
+<td class="px-stack-md py-4">
+<div class="flex flex-col">
+<span class="text-body-sm font-bold text-on-surface">Delayed Concrete Pour Window</span>
+<span class="text-[10px] text-logistics-risk font-label-caps">LOGISTICAL</span>
+</div>
+</td>
+<td class="px-stack-md py-4">
+<span class="flex items-center gap-2 px-2 py-1 bg-logistics-risk/10 border border-logistics-risk/20 rounded text-[10px] font-bold text-logistics-risk uppercase tracking-tighter">
+<span class="risk-dot bg-logistics-risk"></span> Medium
+                                            </span>
+</td>
+<td class="px-stack-md py-4">
+<span class="text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="hourglass_empty">hourglass_empty</span> Pending Review
+                                            </span>
+</td>
+<td class="px-stack-md py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-secondary flex items-center justify-center text-[10px] text-on-secondary font-bold">LOG</div>
+<span class="text-[11px] font-agent-tag text-on-surface-variant">Logi-Synth</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Ethics Interceptor Log (Large Card View) -->
+<div class="glass-surface rounded-xl p-stack-md shadow-2xl relative overflow-hidden group">
+<!-- Background Glow Decoration -->
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-agent-planner/5 blur-3xl group-hover:bg-agent-planner/10 transition-all duration-700"></div>
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-agent-planner" data-icon="policy">policy</span>
+                                Ethics &amp; Guardrail Logs
+                            </h3>
+<span class="px-2 py-1 bg-agent-planner/20 text-agent-planner rounded font-agent-tag text-[10px] uppercase font-bold tracking-widest border border-agent-planner/30">Protocol: Interceptor-9</span>
+</div>
+<div class="space-y-stack-sm">
+<!-- Intercept Entry 1 -->
+<div class="flex gap-4 p-stack-sm bg-white/5 rounded border border-white/5 hover:bg-white/[0.08] transition-all">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-agent-risk text-xl" data-icon="lock_clock">lock_clock</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-body-sm font-bold text-on-surface">Interceptor forced USCG lifejacket safety guidelines</span>
+<span class="text-on-surface-variant text-[10px] font-label-caps">12:04:22 PM</span>
+</div>
+<p class="text-body-sm text-on-surface-variant leading-relaxed mb-2">
+                                        Agent "Structural-X" attempted to bypass coastal safety kit requirements for high-altitude weld. <span class="text-primary italic">Interceptor forced site Alpha-9 compliance with coastal safety standards.</span>
+</p>
+<div class="flex items-center gap-stack-md">
+<span class="text-[10px] font-label-caps text-on-surface-variant border border-white/10 px-2 py-0.5 rounded">REG: USCG-C-21</span>
+<span class="text-[10px] font-label-caps text-agent-decision flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                            Compliance Overridden Successfully
+                                        </span>
+</div>
+</div>
+</div>
+<!-- Intercept Entry 2 -->
+<div class="flex gap-4 p-stack-sm bg-white/5 rounded border border-white/5 hover:bg-white/[0.08] transition-all">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-agent-decision text-xl" data-icon="shield_person">shield_person</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-body-sm font-bold text-on-surface">Privacy Guardrail Engagement</span>
+<span class="text-on-surface-variant text-[10px] font-label-caps">09:15:10 AM</span>
+</div>
+<p class="text-body-sm text-on-surface-variant leading-relaxed mb-2">
+                                        Vision Agent filtered out facial biometric data from public progress stream to maintain local labor union privacy agreements.
+                                    </p>
+<div class="flex items-center gap-stack-md">
+<span class="text-[10px] font-label-caps text-on-surface-variant border border-white/10 px-2 py-0.5 rounded">REG: GDPR/E-2024</span>
+<span class="text-[10px] font-label-caps text-agent-decision flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="history" style="font-variation-settings: 'FILL' 1;">history</span>
+                                            Auto-Logged to Audit Chain
+                                        </span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-center">
+<button class="text-on-surface-variant text-body-sm font-medium hover:text-primary transition-all flex items-center gap-1">
+                                View Full Guardrail Audit Stream
+                                <span class="material-symbols-outlined text-[16px]" data-icon="keyboard_arrow_right">keyboard_arrow_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Site Metrics & Visual Insight -->
+<div class="space-y-gutter">
+<!-- Compliance RAG Meter -->
+<div class="glass-surface rounded-xl p-stack-md flex flex-col items-center">
+<span class="text-label-caps font-label-caps uppercase text-on-surface-variant mb-4 self-start">Site Alpha-9 Health</span>
+<div class="relative w-40 h-40 flex items-center justify-center">
+<!-- SVG Gauge Mockup -->
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-agent-decision transition-all duration-1000" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="44" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-on-surface">90%</span>
+<span class="text-[10px] font-label-caps text-on-surface-variant">NOMINAL</span>
+</div>
+</div>
+<div class="mt-4 w-full space-y-2">
+<div class="flex justify-between items-center text-[11px]">
+<span class="text-on-surface-variant font-label-caps uppercase">Regulatory Alignment</span>
+<span class="text-agent-decision">92%</span>
+</div>
+<div class="flex justify-between items-center text-[11px]">
+<span class="text-on-surface-variant font-label-caps uppercase">Site Worker Safety Score</span>
+<span class="text-logistics-risk">84%</span>
+</div>
+<div class="flex justify-between items-center text-[11px]">
+<span class="text-on-surface-variant font-label-caps uppercase">Environmental Integrity</span>
+<span class="text-agent-decision">98%</span>
+</div>
+</div>
+</div>
+<!-- Visual Site Context Card -->
+<div class="glass-surface rounded-xl overflow-hidden group">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60" data-alt="A high-altitude aerial drone shot of a massive coastal construction site named Alpha-9 at twilight. Intricate scaffolding and steel structures are illuminated by warm industrial floodlights, while the surrounding ocean is dark blue and peaceful. Digital risk overlays in transparent orange and red pulses indicate monitored areas. Cinematic, sharp, architectural photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeCGF5pi71Ei-7CAGDA_Ca8DSHEkU9uhJ8QYMe9LBJCR4T05APucs1aBBI_j84ZaW4lsWL8OGiYGeRXjDyuN7xMkBF2ezR7j9CD038iBSiznzJODVHatVLNyDDNni9NG8vzCgX7spssbwG_deVADmn7NItQUtmu8nlB-utrsf1JvUQbd6tJxuuGWCbOCIDwtEZF7AF_X3uPcqeE-ap1OQd6hhE5TQiFgzFcl2Ixpk7HAV8h-0TUxGbhBXkuc4F1bbDWBudXY89S3M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-elevated to-transparent"></div>
+<div class="absolute bottom-3 left-4">
+<span class="text-label-caps font-label-caps uppercase text-white bg-safety-risk px-2 py-0.5 rounded text-[10px] shadow-lg">LIVE MONITOR</span>
+<h4 class="text-on-surface font-bold text-body-md mt-1">Sector D: Scaffolding</h4>
+</div>
+</div>
+<div class="p-4 bg-surface-elevated">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-safety-risk animate-pulse"></span>
+<span class="text-[10px] font-label-caps text-on-surface">ANOMALY DETECTED</span>
+</div>
+<span class="text-[10px] font-label-caps text-on-surface-variant">0.4s LATENCY</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-4">
+                                Thermal imaging indicates structural strain at node D-12. Interceptor has paused robotic crane operations in this quadrant.
+                            </p>
+<button class="w-full py-2 border border-primary/40 text-primary font-label-caps text-[11px] uppercase tracking-widest rounded hover:bg-primary/10 transition-all active:scale-[0.98]">
+                                Open Sector Diagnostics
+                            </button>
+</div>
+</div>
+<!-- Regulatory Links Card -->
+<div class="glass-surface rounded-xl p-stack-md">
+<h4 class="text-on-surface font-bold text-body-sm mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-tertiary" data-icon="book">book</span>
+                            Standard References
+                        </h4>
+<ul class="space-y-2">
+<li>
+<a class="flex justify-between items-center group" href="#">
+<span class="text-body-sm text-on-surface-variant group-hover:text-primary transition-all">OSHA 1926 Construction</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary" data-icon="open_in_new">open_in_new</span>
+</a>
+</li>
+<li>
+<a class="flex justify-between items-center group" href="#">
+<span class="text-body-sm text-on-surface-variant group-hover:text-primary transition-all">ASCE 7-22 Hazards</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary" data-icon="open_in_new">open_in_new</span>
+</a>
+</li>
+<li>
+<a class="flex justify-between items-center group" href="#">
+<span class="text-body-sm text-on-surface-variant group-hover:text-primary transition-all">Building Regs Part L</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary" data-icon="open_in_new">open_in_new</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full py-stack-lg px-margin-edge flex flex-col md:flex-row justify-between items-center gap-stack-md bg-surface-container-lowest border-t border-white/5 mt-auto">
+<div class="flex flex-col md:items-start items-center">
+<span class="font-headline-md text-headline-md text-on-surface font-extrabold tracking-tight">Constructify</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">© 2024 Constructify AI Orchestration. All rights reserved.</p>
+</div>
+<div class="flex gap-stack-lg">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all uppercase" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all uppercase" href="#">Ethical Guardrails</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all uppercase" href="#">API Documentation</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all uppercase" href="#">Contact</a>
+</div>
+</footer>
+<!-- Interactive Layer: FAB (Contextual for Dashboard/Home) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-90 transition-transform duration-300" data-icon="add">add</span>
+</button>
+<script>
+        // Micro-interaction: Update time strings every minute
+        setInterval(() => {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            // This is just a placeholder for logic that could update real-time logs
+        }, 1000);
+
+        // Simple button click ripple effect or hover sounds could go here for "Tactile Tech" edge
+    </script>
+</body></html>

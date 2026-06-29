@@ -25,7 +25,7 @@ function mapJsonTypeToGemini(type: string): SchemaType {
 // Converts standard JSON Schema parameter objects into strict Gemini Function Declarations
 function convertMcpSchemaToGemini(inputSchema: any) {
   const properties: Record<string, any> = {};
-  
+
   if (inputSchema && inputSchema.properties) {
     for (const [key, value] of Object.entries(inputSchema.properties)) {
       const val = value as any;
@@ -68,7 +68,7 @@ export async function executeAgentWithMcp(
     { name: "AgentMcpClient", version: "1.0.0" },
     { capabilities: {} }
   );
-  
+
   const server = createConstructionMcpServer();
 
   // Connect both endpoints to their respective transports in parallel
@@ -94,7 +94,7 @@ export async function executeAgentWithMcp(
     // 5. Build the Gemini generative model with the loaded tools
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       systemInstruction: systemInstruction,
       tools: functionDeclarations.length > 0 ? [{ functionDeclarations }] : undefined,
     });
@@ -152,8 +152,8 @@ export async function executeAgentWithMcp(
   } finally {
     // 7. Guaranteed cleanup and tear-down of the linked transports
     await Promise.all([
-      client.close().catch(() => {}),
-      server.close().catch(() => {}),
+      client.close().catch(() => { }),
+      server.close().catch(() => { }),
     ]);
   }
 }

@@ -25,9 +25,9 @@ export function proxy(request: NextRequest) {
   }
 
   // Identify accessible non-authenticated gateway targets
-  const isPublicPath = 
-    pathname === "/login" || 
-    pathname === "/signup" || 
+  const isPublicPath =
+    pathname === "/login" ||
+    pathname === "/signup" ||
     pathname.startsWith("/api/auth");
 
   // If an active user requests authorization screens, automatically bounce them to operational view

@@ -9,4 +9,3 @@ build
 .env.production.local
 .git
 .gitignore
-README.md

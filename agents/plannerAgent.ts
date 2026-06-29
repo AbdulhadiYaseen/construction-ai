@@ -7,7 +7,7 @@ export async function plannerAgent(projectDescription: string): Promise<string> 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
       });
 
       const prompt = `You are an expert multi-agent construction operations orchestrator. Analyze the provided project overview and generate a structured execution plan containing:\n1. Operational Tasks (with suggested roles and timeline estimates)\n2. Risk Factors (categorized with severity flags)\n3. Autonomous Logistics & Site Setup recommendations.\nFormat beautifully in Markdown.\n\nProject Description:\n${projectDescription}`;
@@ -23,10 +23,10 @@ export async function plannerAgent(projectDescription: string): Promise<string> 
 
   // Dynamic fallback generator to provide realistic mock blueprints if Gemini is offline
   const lowerDesc = projectDescription.toLowerCase();
-  
+
   let dynamicRisks = "";
   let dynamicTasks = "";
-  
+
   if (lowerDesc.includes("seaside") || lowerDesc.includes("ocean") || lowerDesc.includes("beach") || lowerDesc.includes("coast") || lowerDesc.includes("sea")) {
     dynamicTasks = `
 - **Coastal Geotechnical Marine Soil Analysis** 
